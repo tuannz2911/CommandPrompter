@@ -37,7 +37,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.fusesource.jansi.Ansi;
 
 import javax.annotation.Nullable;
@@ -63,7 +62,6 @@ public class PromptManager extends HashMap<String, Class<? extends Prompt>> {
     private final CommandPrompter plugin;
     private final PromptRegistry promptRegistry;
     private final PromptParser promptParser;
-    private final BukkitScheduler scheduler;
 
     private static final HashMap<Class<? extends Prompt>, Version> supportTable;
 
@@ -84,7 +82,7 @@ public class PromptManager extends HashMap<String, Class<? extends Prompt>> {
         this.plugin = commandPrompter;
         this.promptRegistry = new PromptRegistry(plugin);
         this.promptParser = new PromptParser(this);
-        this.scheduler = Bukkit.getScheduler();
+        this.scheduler = CommandPrompter.getScheduler();
     }
 
     public void registerPrompts() {
@@ -130,7 +128,7 @@ public class PromptManager extends HashMap<String, Class<? extends Prompt>> {
 
         if (!queue.isEmpty()) {
             var prompt = Objects.requireNonNull(queue.peek());
-            Bukkit.getScheduler().runTaskLater(plugin, prompt::sendPrompt, 2L);
+            CommandPrompter.getScheduler().runTaskLater(plugin, prompt::sendPrompt, 2L);
             plugin.getPluginLogger().debug("Sent %s to %s", prompt.getClass().getSimpleName(), sender.getName());
         } else if (queue.containsPCM()) {
             // This means queue is empty but contains PCM. If it does, we just dispatch it.
@@ -205,7 +203,7 @@ public class PromptManager extends HashMap<String, Class<? extends Prompt>> {
             sender.setOp(false);
             plugin.getPluginLogger().debug("Remove OP status");
             // Redundancy for de-op
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            CommandPrompter.getScheduler().runTaskLater(plugin, () -> {
                 plugin.getPluginLogger().debug("Remove OP status (redundancy)");
                 sender.setOp(false);
             }, 2L);
@@ -259,7 +257,7 @@ public class PromptManager extends HashMap<String, Class<? extends Prompt>> {
                     return;
 
                 if (pcm.delayTicks() > 0)
-                    plugin.getServer().getScheduler().runTaskLater(plugin, () -> queue.execPCM(pcm, (Player) sender),
+                    CommandPrompter.getScheduler().runTaskLater(plugin, () -> queue.execPCM(pcm, (Player) sender),
                             pcm.delayTicks());
                 else
                     queue.execPCM(pcm, (Player) sender);
