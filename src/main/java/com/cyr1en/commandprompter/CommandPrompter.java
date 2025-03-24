@@ -45,6 +45,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
+
 import java.util.Objects;
 
 public class CommandPrompter extends JavaPlugin {
@@ -65,9 +68,12 @@ public class CommandPrompter extends JavaPlugin {
     private HeadCache headCache;
     private CommandAPIWrapper commandAPIWrapper;
 
+    private static TaskScheduler scheduler;
+
     @Override
     public void onEnable() {
-
+        scheduler = UniversalScheduler.getScheduler(this);
+        
         new Metrics(this, 5359);
         setupConfig();
         logger = new PluginLogger(this, "CommandPrompter");
@@ -209,5 +215,9 @@ public class CommandPrompter extends JavaPlugin {
 
     public UpdateChecker getUpdateChecker() {
         return updateChecker;
+    }
+
+    public static TaskScheduler getScheduler() {
+        return scheduler;
     }
 }
