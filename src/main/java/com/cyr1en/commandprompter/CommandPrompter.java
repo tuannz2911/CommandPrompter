@@ -96,7 +96,7 @@ public class CommandPrompter extends JavaPlugin {
         instance = this;
         Bukkit.getPluginManager().registerEvents(new CommandSendListener(this), this);
 
-        Bukkit.getScheduler().runTaskLater(this, () -> {
+        CommandPrompter.getScheduler().runTaskLater(this, () -> {
             hookContainer = new HookContainer(this);
             hookContainer.initHooks();
             headCache.registerFilters();
@@ -150,7 +150,7 @@ public class CommandPrompter extends JavaPlugin {
         updateChecker = new UpdateChecker(this, 47772);
         if (updateChecker.isDisabled())
             return;
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(this, () -> {
+        CommandPrompter.getScheduler().runTaskAsynchronously(this, () -> {
             if (updateChecker.newVersionAvailable())
                 logger.info(SRegex.ANSI_GREEN + "A new update is available! (" +
                         updateChecker.getCurrVersion().asString() + ")" + SRegex.ANSI_RESET);
