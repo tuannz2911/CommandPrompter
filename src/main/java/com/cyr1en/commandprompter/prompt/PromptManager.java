@@ -69,6 +69,8 @@ public class PromptManager extends HashMap<String, Class<? extends Prompt>> {
     // Arbitrary 10 version, that means this should work until minecraft v10 lol "any".
     private static final Version ANY = Version.parse("10");
 
+    CommandPrompter scheduler = CommandPrompter.getScheduler();
+    
     static {
         supportTable = new HashMap<>();
         supportTable.put(ChatPrompt.class, ANY);
@@ -82,7 +84,6 @@ public class PromptManager extends HashMap<String, Class<? extends Prompt>> {
         this.plugin = commandPrompter;
         this.promptRegistry = new PromptRegistry(plugin);
         this.promptParser = new PromptParser(this);
-        this.scheduler = CommandPrompter.getScheduler();
     }
 
     public void registerPrompts() {
